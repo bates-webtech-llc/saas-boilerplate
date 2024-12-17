@@ -19,7 +19,6 @@
 	const form = superForm(data, {
 		validators: zodClient(loginFormSchema),
 		onResult(event) {
-			console.log(event);
 			if (event.result.type === 'success') {
 				email_sent = true;
 			}
@@ -34,7 +33,12 @@
 	}
 </script>
 
-<div class="flex flex-col gap-6 p-10 min-w-[365px] w-fit">
+<div class="w-full max-w-sm">
+	<div class="text-center mb-10">
+		<h2 class="text-3xl font-bold tracking-tight text-gray-900">Welcome back</h2>
+		<p class="mt-2 text-sm text-gray-600">Sign in to your account to continue</p>
+	</div>
+
 	{#if email_sent}
 		<div class="text-center">
 			<Mail size="40" class="mx-auto my-4" />
@@ -47,39 +51,50 @@
 			{/if}
 		</div>
 	{:else}
-		<a
-			href="/login/google"
-			class={twMerge(
-				buttonVariants({ variant: 'outline', size: 'lg' }),
-				'flex items-center gap-2 max-w-xs'
-			)}
-		>
-			<span class="flex items-center gap-2">
-				<Google class="h-4 w-4" />
-				Continue with Google</span
-			></a
-		>
-		{#if loginWithEmail}
-			<form class="max-w-xs" method="POST" action="/login?/login_with_email" use:enhance>
-				<Form.Field {form} name="email">
-					<Form.Control>
-						{#snippet children({ props })}
-							<Input
-								bind:ref={email_input}
-								{...props}
-								placeholder="Email"
-								bind:value={$formData.email}
-							/>
-						{/snippet}
-					</Form.Control>
-					<Form.FieldErrors />
-				</Form.Field>
-				<Form.Button class="w-full">Continue</Form.Button>
-			</form>
-		{:else}
-			<Button variant="outline" size="lg" class="max-w-xs w-full " onclick={handleLoginWithEmail}
-				>Continue with email</Button
+		<div class="flex flex-col gap-4">
+			<a
+				href="/login/google"
+				class={twMerge(
+					buttonVariants({ variant: 'outline', size: 'lg' }),
+					'w-full flex items-center justify-center gap-2'
+				)}
 			>
-		{/if}
+				<Google class="h-4 w-4" />
+				Continue with Google
+			</a>
+
+			<div class="relative my-4">
+				<div class="absolute inset-0 flex items-center">
+					<span class="w-full border-t" />
+				</div>
+				<div class="relative flex justify-center text-xs uppercase">
+					<span class="bg-white px-2 text-gray-500">Or continue with</span>
+				</div>
+			</div>
+
+			{#if loginWithEmail}
+				<form method="POST" action="/login?/login_with_email" use:enhance>
+					<Form.Field {form} name="email">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Input
+									bind:ref={email_input}
+									{...props}
+									placeholder="Email"
+									bind:value={$formData.email}
+									class="w-full"
+								/>
+							{/snippet}
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
+					<Form.Button class="w-full mt-4">Continue with Email</Form.Button>
+				</form>
+			{:else}
+				<Button variant="outline" size="lg" class="w-full" onclick={handleLoginWithEmail}>
+					Continue with email
+				</Button>
+			{/if}
+		</div>
 	{/if}
 </div>

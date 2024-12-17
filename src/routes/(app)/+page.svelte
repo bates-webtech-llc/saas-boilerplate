@@ -4,6 +4,6 @@
 	let { data }: { data: PageData } = $props();
 </script>
 
-<div class="container my-10">
+<div class="container p-10">
 	<pre>{JSON.stringify(data.user, null, 2)}</pre>
 </div>
